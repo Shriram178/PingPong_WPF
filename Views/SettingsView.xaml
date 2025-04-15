@@ -1,0 +1,68 @@
+﻿<UserControl x:Class="BounceBall.Views.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:titles="clr-namespace:BounceBall.Constants"
+             xmlns:local="clr-namespace:BounceBall.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <!-- Pause Animation -->
+        <Storyboard x:Key="PauseAnimation">
+            <DoubleAnimation Storyboard.TargetName="SettingsPanel"
+                             Storyboard.TargetProperty="Opacity"
+                             From="0"
+                             To="1"
+                             Duration="0:0:0.5" />
+            <DoubleAnimation Storyboard.TargetName="SettingsPanel"
+                             Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleX)"
+                             From="0.8"
+                             To="1"
+                             Duration="0:0:0.5" />
+        </Storyboard>
+        <!-- Resume Animation -->
+        <Storyboard x:Key="ResumeAnimation">
+            <DoubleAnimation Storyboard.TargetName="SettingsPanel"
+                             Storyboard.TargetProperty="Opacity"
+                             From="1"
+                             To="0"
+                             Duration="0:0:0.5" />
+            <DoubleAnimation Storyboard.TargetName="SettingsPanel"
+                             Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleX)"
+                             From="1"
+                             To="0.8"
+                             Duration="0:0:0.5" />
+            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleY)"
+                             From="1"
+                             To="0.8"
+                             Duration="0:0:0.5" />
+        </Storyboard>
+    </UserControl.Resources>
+    <StackPanel x:Name="SettingsPanel" Margin="50"
+                RenderTransformOrigin="0.5,0.5">
+        <StackPanel.RenderTransform>
+            <ScaleTransform />
+        </StackPanel.RenderTransform>
+        <TextBlock FontSize="30"
+                   FontWeight="Bold"
+                   HorizontalAlignment="Center"
+                   Text="{Binding Source={x:Static titles:Titles.Settings}}"
+                   Foreground="ForestGreen" />
+        <TextBlock Text="Ball Size" />
+        <Slider Minimum="10"
+                Maximum="100"
+                Value="{Binding Ball.Size, Mode=TwoWay}" />
+        <TextBlock Text="Ball Speed" />
+        <Slider Minimum="1"
+                Maximum="20"
+                Value="{Binding Ball.SpeedX, Mode=TwoWay}" />
+        <TextBlock Text="Paddle Width" />
+        <Slider Minimum="50"
+                Maximum="200"
+                Value="{Binding Paddle.Width, Mode=TwoWay}" />
+    </StackPanel>
+</UserControl>
+
+    
+    
