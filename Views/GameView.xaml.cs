@@ -122,7 +122,6 @@ namespace BounceBall.Views
             settingsWindow.Owner = this;
             settingsWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
 
-            // Play the pause animation when the window is opened
             settingsWindow.Loaded += (s, e) =>
             {
                 var storyboard = (Storyboard)settingsView.FindResource("PauseAnimation");
@@ -133,7 +132,6 @@ namespace BounceBall.Views
             {
                 if (e.Key == Key.Escape)
                 {
-                    // Play the resume animation before closing the window
                     var storyboard = (Storyboard)settingsView.FindResource("ResumeAnimation");
                     storyboard.Completed += (s2, e2) =>
                     {
