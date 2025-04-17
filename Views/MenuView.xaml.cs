@@ -11,7 +11,7 @@ namespace BounceBall.Views
     /// <summary>
     /// Interaction logic for MenuView.xaml
     /// </summary>
-    public partial class MenuView : Window
+    public partial class MenuView : Page
     {
         private int selectedIndex = 0;
         private TextBlock[] menuItems;
@@ -60,21 +60,19 @@ namespace BounceBall.Views
             }
             else if (e.Key == Key.Enter)
             {
-                NavigateToWindow();
+                NavigateToPage();
             }
         }
 
-        private void NavigateToWindow()
+        private void NavigateToPage()
         {
             switch (selectedIndex)
             {
                 case 0:
-                    GameView playWindow = new GameView(_currentUser, _gameDataManager);
-                    playWindow.Show();
+                    NavigationService.Navigate(new GameView(_currentUser, _gameDataManager));
                     break;
                 case 1:
-                    ProfileView profileWindow = new ProfileView(_currentUser, _gameDataManager);
-                    profileWindow.Show();
+                    NavigationService.Navigate(new ProfileView(_currentUser, _gameDataManager));
                     break;
                 case 2:
                     MessageBox.Show("Settings");
@@ -88,25 +86,25 @@ namespace BounceBall.Views
         private void PlayText_MouseDown(object sender, MouseButtonEventArgs e)
         {
             selectedIndex = 0;
-            NavigateToWindow();
+            NavigateToPage();
         }
 
         private void ProfileText_MouseDown(object sender, MouseButtonEventArgs e)
         {
             selectedIndex = 1;
-            NavigateToWindow();
+            NavigateToPage();
         }
 
         private void SettingsText_MouseDown(object sender, MouseButtonEventArgs e)
         {
             selectedIndex = 2;
-            NavigateToWindow();
+            NavigateToPage();
         }
 
         private void ExitText_MouseDown(object sender, MouseButtonEventArgs e)
         {
             selectedIndex = 3;
-            NavigateToWindow();
+            NavigateToPage();
         }
 
 

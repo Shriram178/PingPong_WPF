@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
@@ -11,7 +12,7 @@ namespace BounceBall.Views
     /// <summary>
     /// Interaction logic for GameView.xaml
     /// </summary>
-    public partial class GameView : Window
+    public partial class GameView : Page
     {
         private GameViewModel _gameViewModel;
         private bool _isPaused;
@@ -122,8 +123,8 @@ namespace BounceBall.Views
                 Height = 400,
                 Title = "Settings"
             };
-            settingsWindow.Owner = this;
-            settingsWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            //settingsWindow.Owner = this;
+            //settingsWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
 
             settingsWindow.Loaded += (s, e) =>
             {

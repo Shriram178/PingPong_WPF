@@ -4,7 +4,6 @@ using System.Windows.Input;
 using BounceBall.Command;
 using BounceBall.Manager;
 using BounceBall.Models;
-using BounceBall.Views;
 
 namespace BounceBall.ViewModels
 {
@@ -15,15 +14,17 @@ namespace BounceBall.ViewModels
         private string _password;
         private string _confirmPassword;
         private UserManager _userManager;
+        public Action<User> _onLoginSuccess;
 
         public ICommand LoginCommand { get; }
         public ICommand SignUpCommand { get; }
 
-        public LoginAndSignUpViewModel(UserManager userManager)
+        public LoginAndSignUpViewModel(UserManager userManager, Action<User> onLoginSuccess)
         {
             LoginCommand = new RelayCommand(Login, CanLogin);
             SignUpCommand = new RelayCommand(Signup, CanSignUp);
             _userManager = userManager;
+            _onLoginSuccess = onLoginSuccess;
         }
 
         private bool CanSignUp(object obj)
@@ -64,11 +65,8 @@ namespace BounceBall.ViewModels
             if (_userManager.ValidateUser(UserName, Password))
             {
                 User currentUser = _userManager.GetUser(UserName, Password);
-                MenuView menuView = new MenuView(currentUser);
-                var LoginWindow = obj as Window;
-                menuView.Owner = LoginWindow;
-                menuView.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-                menuView.Show();
+                _onLoginSuccess?.Invoke(currentUser);
+
             }
             else
             {

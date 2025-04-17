@@ -9,13 +9,19 @@ namespace BounceBall.Views
     /// <summary>
     /// Interaction logic for LoginAndSignUpView.xaml
     /// </summary>
-    public partial class LoginAndSignUpView : Window
+    public partial class LoginAndSignUpView : Page
     {
         public LoginAndSignUpView()
         {
-            this.DataContext = new LoginAndSignUpViewModel(new UserManager(new FileHandler()));
+            LoginAndSignUpViewModel viewModel = new LoginAndSignUpViewModel(new UserManager(new FileHandler()), NavigateToMenu);
+            this.DataContext = viewModel;
             InitializeComponent();
 
+        }
+
+        private void NavigateToMenu(Models.User currentUser)
+        {
+            NavigationService.Navigate(new MenuView(currentUser));
         }
 
         private void ShowSignupPanel(object sender, RoutedEventArgs e)
