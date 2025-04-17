@@ -39,15 +39,24 @@ namespace BounceBall.ViewModels
 
         private void Signup(object obj)
         {
-            if (Password == ConfirmPassword)
+            try
             {
-                _userManager.AddUser(new User(UserName, Password));
-                MessageBox.Show($"Account for {UserName} created !!");
+                if (Password == ConfirmPassword)
+                {
+                    _userManager.AddUser(new User(UserName, Password));
+                    MessageBox.Show($"Account for {UserName} created !!");
+                }
+                else
+                {
+                    MessageBox.Show("Error : Cannot create account");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("Error : Cannot create account");
+                MessageBox.Show(ex.Message);
             }
+
+
         }
 
         private void Login(object obj)
@@ -55,7 +64,7 @@ namespace BounceBall.ViewModels
             if (_userManager.ValidateUser(UserName, Password))
             {
                 User currentUser = _userManager.GetUser(UserName, Password);
-                MenuView menuView = new MenuView();
+                MenuView menuView = new MenuView(currentUser);
                 var LoginWindow = obj as Window;
                 menuView.Owner = LoginWindow;
                 menuView.WindowStartupLocation = WindowStartupLocation.CenterOwner;

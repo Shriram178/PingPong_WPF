@@ -40,8 +40,7 @@
             <TextBox x:Name="UsernameLogin"
                      Text="{Binding UserName, UpdateSourceTrigger=PropertyChanged}"
                      Margin="10"
-                     GotFocus="RemovePlaceholderText"
-                     LostFocus="AddPlaceholderText" />
+                      />
             <Grid Margin="10">
                 <TextBox x:Name="PasswordPlaceholderLogin"
                          Text="Password"
@@ -50,8 +49,8 @@
                          Visibility="Visible" />
                 <PasswordBox x:Name="PasswordLogin"
                              PasswordChanged="PasswordBox_PasswordChanged"
-                             GotFocus="RemovePlaceholderText"
-                             LostFocus="AddPlaceholderText" />
+                             
+                             />
             </Grid>
             <Button Content="Login"
                     Command="{Binding LoginCommand}"
@@ -73,8 +72,7 @@
             <TextBox x:Name="UsernameSignup"
                      Text="{Binding UserName, UpdateSourceTrigger=PropertyChanged}"
                      Margin="10"
-                     GotFocus="RemovePlaceholderText"
-                     LostFocus="AddPlaceholderText" />
+                     />
             <Grid Margin="10">
                 <TextBox x:Name="PasswordPlaceholderSignup"
                          Text="Password"
@@ -83,8 +81,7 @@
                          Visibility="Visible" />
                 <PasswordBox x:Name="PasswordSignup"
                              PasswordChanged="PasswordBox_PasswordChanged"
-                             GotFocus="RemovePlaceholderText"
-                             LostFocus="AddPlaceholderText" />
+                              />
             </Grid>
             <Grid Margin="10">
                 <TextBox x:Name="ConfirmPasswordPlaceholderSignup"
@@ -94,8 +91,7 @@
                          Visibility="Visible" />
                 <PasswordBox x:Name="ConfirmPasswordSignup"
                              PasswordChanged="PasswordBox_PasswordChanged"
-                             GotFocus="RemovePlaceholderText"
-                             LostFocus="AddPlaceholderText" />
+                              />
             </Grid>
             <TextBlock x:Name="PasswordMismatchWarning"
                        Text="Passwords do not match"

@@ -13,7 +13,7 @@ namespace BounceBall.Views
     {
         public LoginAndSignUpView()
         {
-            this.DataContext = new LoginAndSignUpViewModel(new UserManager());
+            this.DataContext = new LoginAndSignUpViewModel(new UserManager(new FileHandler()));
             InitializeComponent();
 
         }
@@ -44,51 +44,7 @@ namespace BounceBall.Views
             fadeOut.Begin(SignupPanel);
         }
 
-        private void RemovePlaceholderText(object sender, RoutedEventArgs e)
-        {
-            if (sender is TextBox textBox && textBox.Text == "Username")
-            {
-                textBox.Text = "";
-            }
-            else if (sender is PasswordBox passwordBox)
-            {
-                if (passwordBox.Name == "PasswordLogin" && PasswordPlaceholderLogin.Visibility == Visibility.Visible)
-                {
-                    PasswordPlaceholderLogin.Visibility = Visibility.Collapsed;
-                }
-                else if (passwordBox.Name == "PasswordSignup" && PasswordPlaceholderSignup.Visibility == Visibility.Visible)
-                {
-                    PasswordPlaceholderSignup.Visibility = Visibility.Collapsed;
-                }
-                else if (passwordBox.Name == "ConfirmPasswordSignup" && ConfirmPasswordPlaceholderSignup.Visibility == Visibility.Visible)
-                {
-                    ConfirmPasswordPlaceholderSignup.Visibility = Visibility.Collapsed;
-                }
-            }
-        }
 
-        private void AddPlaceholderText(object sender, RoutedEventArgs e)
-        {
-            if (sender is TextBox textBox && string.IsNullOrWhiteSpace(textBox.Text))
-            {
-                textBox.Text = "Username";
-            }
-            else if (sender is PasswordBox passwordBox && string.IsNullOrWhiteSpace(passwordBox.Password))
-            {
-                if (passwordBox.Name == "PasswordLogin")
-                {
-                    PasswordPlaceholderLogin.Visibility = Visibility.Visible;
-                }
-                else if (passwordBox.Name == "PasswordSignup")
-                {
-                    PasswordPlaceholderSignup.Visibility = Visibility.Visible;
-                }
-                else if (passwordBox.Name == "ConfirmPasswordSignup")
-                {
-                    ConfirmPasswordPlaceholderSignup.Visibility = Visibility.Visible;
-                }
-            }
-        }
 
         private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
         {

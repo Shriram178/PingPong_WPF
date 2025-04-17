@@ -4,21 +4,32 @@ namespace BounceBall.Manager
 {
     public class UserManager
     {
-        private List<User> users = new List<User>();
+        private readonly FileHandler _fileHandler;
+        private List<User> _users = new List<User>();
+
+        public UserManager(FileHandler fileHandler)
+        {
+            _fileHandler = fileHandler;
+            _users = _fileHandler.LoadUsers();
+        }
 
         public void AddUser(User user)
         {
-            users.Add(user);
+            if (_users.Any(u => u.UserName == user.UserName))
+                throw new InvalidOperationException($"User with the username {user.UserName} already exists.");
+
+            _users.Add(user);
+            _fileHandler.SaveUsers(_users);
         }
 
         public bool ValidateUser(string username, string password)
         {
-            return users.Any(u => u.UserName == username && u.Password == password);
+            return _users.Any(u => u.UserName == username && u.Password == password);
         }
 
         public User GetUser(string userName, string password)
         {
-            return users.First(u => u.UserName == userName && u.Password == password);
+            return _users.First(u => u.UserName == userName && u.Password == password);
         }
     }
 

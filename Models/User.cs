@@ -1,16 +1,21 @@
-﻿namespace BounceBall.Models
+﻿using CsvHelper.Configuration.Attributes;
+
+namespace BounceBall.Models
 {
     public class User
     {
+        public User() { }
+
         public User(string name, string password)
         {
-            Id = Guid.NewGuid();
             UserName = name;
             Password = password;
         }
 
-        public Guid Id { get; }
+        [Name("UserName")]
         public string UserName { get; set; }
+
+        [Name("Password")]
         public string Password { get; set; }
     }
 }

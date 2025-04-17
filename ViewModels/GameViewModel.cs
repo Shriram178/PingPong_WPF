@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Threading;
+using BounceBall.Manager;
 using BounceBall.Models;
 
 namespace BounceBall.ViewModels
@@ -18,18 +19,34 @@ namespace BounceBall.ViewModels
         private double _canvasWidth;
         private double _canvasHeight;
 
+        private readonly GameDataManager _gameDataManager;
+        private readonly string _currentUsername;
+
+        private DateTime _currentGameStartTime;
+
         public int Score { get => _score; set { _score = value; OnPropertyChanged(); } }
         public bool IsRunning { get => _isRunning; set { _isRunning = value; OnPropertyChanged(); } }
         public double CanvasWidth { get => _canvasWidth; set { _canvasWidth = value; OnPropertyChanged(); } }
         public double CanvasHeight { get => _canvasHeight; set { _canvasHeight = value; OnPropertyChanged(); } }
 
-        public GameViewModel()
+        public GameViewModel(GameDataManager gameDataManager, string currentUsername)
         {
+            _gameDataManager = gameDataManager;
+            _currentUsername = currentUsername;
             Ball = new BallModel { X = 100, Y = 100, SpeedX = 5, SpeedY = 5, Size = 15, Color = Brushes.Red };
             Paddle = new PaddleModel { X = 350, Width = 100 };
             _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(1) };
             _timer.Tick += Update;
+            _currentGameStartTime = DateTime.Now;
             StartGame();
+        }
+
+        public void OnGameOver()
+        {
+            var gameData = new GameData(Score, _currentGameStartTime, DateTime.Now);
+            _gameDataManager.AddGameData(_currentUsername, gameData);
+
+            MessageBox.Show($"Game Over! Your score: {Score}\nPress Enter to play again.");
         }
 
         private void Update(object sender, EventArgs e)
@@ -60,6 +77,7 @@ namespace BounceBall.ViewModels
                     _timer.Stop();
                     IsRunning = false;
                     GameOver?.Invoke(this, EventArgs.Empty);
+                    OnGameOver();
                     MessageBox.Show("Game Over! Your score: " + Score + "\nPress Enter to play again.");
                 }
             }
@@ -82,8 +100,8 @@ namespace BounceBall.ViewModels
         {
             Ball.X = 100;
             Ball.Y = 100;
-            Ball.SpeedX = 5;
-            Ball.SpeedY = 5;
+            //Ball.SpeedX = 5;
+            //Ball.SpeedY = 5;
             Paddle.X = (CanvasWidth - Paddle.Width) / 2;
             Score = 0;
             StartGame();

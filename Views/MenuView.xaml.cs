@@ -3,6 +3,8 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using BounceBall.Manager;
+using BounceBall.Models;
 
 namespace BounceBall.Views
 {
@@ -13,8 +15,11 @@ namespace BounceBall.Views
     {
         private int selectedIndex = 0;
         private TextBlock[] menuItems;
-        public MenuView()
+        private User _currentUser;
+        private GameDataManager _gameDataManager = new GameDataManager(new FileHandler());
+        public MenuView(User CurrentUser)
         {
+            _currentUser = CurrentUser;
             InitializeComponent();
             menuItems = new TextBlock[] { PlayText, ProfileText, SettingsText, ExitText };
             this.KeyDown += Window_KeyDown;
@@ -64,17 +69,15 @@ namespace BounceBall.Views
             switch (selectedIndex)
             {
                 case 0:
-                    GameView playWindow = new GameView();
+                    GameView playWindow = new GameView(_currentUser, _gameDataManager);
                     playWindow.Show();
-                    this.Close();
                     break;
                 case 1:
-                    MessageBox.Show("Profile");
-                    this.Close();
+                    ProfileView profileWindow = new ProfileView(_currentUser, _gameDataManager);
+                    profileWindow.Show();
                     break;
                 case 2:
                     MessageBox.Show("Settings");
-                    this.Close();
                     break;
                 case 3:
                     Application.Current.Shutdown();

@@ -2,6 +2,8 @@
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using BounceBall.Manager;
+using BounceBall.Models;
 using BounceBall.ViewModels;
 
 namespace BounceBall.Views
@@ -15,11 +17,10 @@ namespace BounceBall.Views
         private bool _isPaused;
         private bool _isMovingLeft;
         private bool _isMovingRight;
-        public GameView()
+        public GameView(User CurrentUser, GameDataManager gameDataManager)
         {
             InitializeComponent();
-            InitializeComponent();
-            _gameViewModel = new GameViewModel();
+            _gameViewModel = new GameViewModel(gameDataManager, CurrentUser.UserName);
             DataContext = _gameViewModel;
             this.KeyDown += OnKeyDown;
             this.KeyUp += OnKeyUp;
@@ -31,6 +32,8 @@ namespace BounceBall.Views
             // Set initial canvas dimensions
             _gameViewModel.CanvasWidth = Playground.ActualWidth;
             _gameViewModel.CanvasHeight = Playground.ActualHeight;
+
+
 
         }
 
