@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Media;
@@ -10,6 +11,8 @@ namespace BounceBall.ViewModels
 {
     public class GameViewModel : INotifyPropertyChanged
     {
+        public ObservableCollection<Obstacle> Obstacles { get; set; } = new ObservableCollection<Obstacle>();
+
         public event EventHandler GameOver;
         public BallModel Ball { get; set; }
         public PaddleModel Paddle { get; set; }
@@ -51,6 +54,29 @@ namespace BounceBall.ViewModels
 
         private void Update(object sender, EventArgs e)
         {
+            // Check for collision with obstacles BEFORE updating the ball's position
+            for (int i = Obstacles.Count - 1; i >= 0; i--)
+            {
+                var obstacle = Obstacles[i];
+                if (IsCollidingWithObstacle(Ball, obstacle))
+                {
+                    // Remove the obstacle
+                    Obstacles.RemoveAt(i);
+
+                    // Change ball direction based on collision
+                    if (Ball.X + Ball.Size >= obstacle.X && Ball.X <= obstacle.X + obstacle.Width)
+                    {
+                        Ball.SpeedY = -Ball.SpeedY; // Vertical collision
+                    }
+                    else
+                    {
+                        Ball.SpeedX = -Ball.SpeedX; // Horizontal collision
+                    }
+
+                    break; // Only handle one collision per frame
+                }
+            }
+
             Ball.X += Ball.SpeedX;
             Ball.Y += Ball.SpeedY;
 
@@ -83,6 +109,20 @@ namespace BounceBall.ViewModels
             }
         }
 
+        // Helper method to check collision between ball and obstacle
+        private bool IsCollidingWithObstacle(BallModel ball, Obstacle obstacle)
+        {
+            // Check if the ball's rectangle intersects with the obstacle's rectangle
+            return ball.X < obstacle.X + obstacle.Width &&
+                   ball.X + ball.Size > obstacle.X &&
+                   ball.Y < obstacle.Y + obstacle.Height &&
+                   ball.Y + ball.Size > obstacle.Y;
+        }
+
+        public void AddObstacle(double x, double y, double width, double height)
+        {
+            Obstacles.Add(new Obstacle { X = x, Y = y, Width = width, Height = height });
+        }
 
         public void Pause()
         {

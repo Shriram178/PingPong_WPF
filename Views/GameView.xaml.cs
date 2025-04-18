@@ -32,9 +32,38 @@ namespace BounceBall.Views
             _gameViewModel.CanvasWidth = Playground.ActualWidth;
             _gameViewModel.CanvasHeight = Playground.ActualHeight;
 
-
-
+            // Add obstacles after the layout is ready
+            this.Loaded += (s, e) => AddObstacles();
         }
+
+        private void AddObstacles()
+        {
+            var random = new Random();
+
+            for (int i = 0; i < 10; i++) // Add 10 small obstacles
+            {
+                double x = random.Next(50, Math.Max(51, (int)_gameViewModel.CanvasWidth - 50));
+                double y = random.Next(50, Math.Max(51, (int)_gameViewModel.CanvasHeight / 2));
+                double width = random.Next(20, 30);
+                double height = random.Next(20, 30);
+
+                var obstacle = new Obstacle { X = x, Y = y, Width = width, Height = height };
+                _gameViewModel.AddObstacle(x, y, width, height);
+
+                // Render the obstacle on the canvas
+                var rectangle = new System.Windows.Shapes.Rectangle
+                {
+                    Width = width,
+                    Height = height,
+                    Fill = Brushes.Black,
+                };
+                Canvas.SetLeft(rectangle, x);
+                Canvas.SetTop(rectangle, y);
+                Playground.Children.Add(rectangle);
+            }
+        }
+
+
 
 
         private void OnSizeChanged(object sender, SizeChangedEventArgs e)
@@ -152,6 +181,7 @@ namespace BounceBall.Views
 
         private void RestartGame()
         {
+            AddObstacles();
             _gameViewModel.Restart();
         }
 
