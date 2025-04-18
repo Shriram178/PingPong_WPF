@@ -6,8 +6,6 @@
         xmlns:local="clr-namespace:BounceBall.Views"
         mc:Ignorable="d"
         Title="LoginAndSignUpView"
-        Height="450"
-        Width="800"
         Name="LoginAndSignUpViewWindow">
     <Page.Resources>
         <Storyboard x:Key="FadeIn">

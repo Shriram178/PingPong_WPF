@@ -5,9 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BounceBall.Views"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800"
+        KeyDown="MainWindow_KeyDown"
+        KeyUp="MainWindow_KeyUp">
     <Grid>
         <Frame x:Name="MainFrame"
-               NavigationUIVisibility="Hidden" />
+               NavigationUIVisibility="Hidden" 
+               HorizontalAlignment="Stretch"
+               VerticalAlignment="Stretch"/>
     </Grid>
 </Window>

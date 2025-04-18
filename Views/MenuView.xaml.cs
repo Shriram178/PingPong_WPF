@@ -11,7 +11,7 @@ namespace BounceBall.Views
     /// <summary>
     /// Interaction logic for MenuView.xaml
     /// </summary>
-    public partial class MenuView : Page
+    public partial class MenuView : Page, IKeyHandler
     {
         private int selectedIndex = 0;
         private TextBlock[] menuItems;
@@ -22,7 +22,6 @@ namespace BounceBall.Views
             _currentUser = CurrentUser;
             InitializeComponent();
             menuItems = new TextBlock[] { PlayText, ProfileText, SettingsText, ExitText };
-            this.KeyDown += Window_KeyDown;
             HighlightText();
         }
 
@@ -46,7 +45,7 @@ namespace BounceBall.Views
             }
         }
 
-        private void Window_KeyDown(object sender, KeyEventArgs e)
+        public void OnKeyDown(KeyEventArgs e)
         {
             if (e.Key == Key.Down)
             {
@@ -62,6 +61,11 @@ namespace BounceBall.Views
             {
                 NavigateToPage();
             }
+        }
+
+        public void OnKeyUp(KeyEventArgs e)
+        {
+            // No specific KeyUp logic for MenuView
         }
 
         private void NavigateToPage()

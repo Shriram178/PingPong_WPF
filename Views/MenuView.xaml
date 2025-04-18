@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BounceBall.Views"
         mc:Ignorable="d"
-        Title="MenuView" Height="450" Width="800">
+        Title="MenuView">
     <Page.Background>
-        <ImageBrush ImageSource="../Images/MenuBG.avif" />
+        <ImageBrush ImageSource="../Images/MenuBG.avif" Stretch="UniformToFill" />
     </Page.Background>
     <Page.Resources>
         <Style TargetType="TextBlock">

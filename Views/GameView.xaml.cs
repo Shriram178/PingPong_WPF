@@ -12,7 +12,7 @@ namespace BounceBall.Views
     /// <summary>
     /// Interaction logic for GameView.xaml
     /// </summary>
-    public partial class GameView : Page
+    public partial class GameView : Page, IKeyHandler
     {
         private GameViewModel _gameViewModel;
         private bool _isPaused;
@@ -23,8 +23,6 @@ namespace BounceBall.Views
             InitializeComponent();
             _gameViewModel = new GameViewModel(gameDataManager, CurrentUser.UserName);
             DataContext = _gameViewModel;
-            this.KeyDown += OnKeyDown;
-            this.KeyUp += OnKeyUp;
             this.SizeChanged += OnSizeChanged;
             CompositionTarget.Rendering += OnRendering;
 
@@ -43,9 +41,11 @@ namespace BounceBall.Views
         {
             _gameViewModel.CanvasWidth = Playground.ActualWidth;
             _gameViewModel.CanvasHeight = Playground.ActualHeight;
+
+            Console.WriteLine($"Canvas Resized: Width={Playground.ActualWidth}, Height={Playground.ActualHeight}");
         }
 
-        private void OnKeyDown(object sender, KeyEventArgs e)
+        public void OnKeyDown(KeyEventArgs e)
         {
             if (e.Key == Key.Left)
             {
@@ -73,7 +73,7 @@ namespace BounceBall.Views
             }
         }
 
-        private void OnKeyUp(object sender, KeyEventArgs e)
+        public void OnKeyUp(KeyEventArgs e)
         {
             if (e.Key == Key.Left)
             {
