@@ -33,8 +33,6 @@ namespace BounceBall.Views
             _gameViewModel.CanvasWidth = Playground.ActualWidth;
             _gameViewModel.CanvasHeight = Playground.ActualHeight;
 
-
-
         }
 
 
