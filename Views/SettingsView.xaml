@@ -61,6 +61,19 @@
         <Slider Minimum="50"
                 Maximum="200"
                 Value="{Binding Paddle.Width, Mode=TwoWay}" />
+        <!-- Buttons Section -->
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    Margin="10,20,0,0">
+            <Button Content="Back"
+                    Width="100"
+                    Margin="5"
+                    Click="GoBack" />
+            <Button Content="Restart"
+                    Width="100"
+                    Margin="5"
+                    Click="Restart"/>
+        </StackPanel>
     </StackPanel>
 </UserControl>
 

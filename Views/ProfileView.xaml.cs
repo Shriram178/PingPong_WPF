@@ -1,4 +1,6 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
+using BounceBall.ViewModels;
 
 namespace BounceBall.Views
 {
@@ -12,5 +14,16 @@ namespace BounceBall.Views
             InitializeComponent();
         }
 
+        private void Back(object sender, System.Windows.RoutedEventArgs e)
+        {
+            var mainViewModel = Application.Current.MainWindow.DataContext as MainViewModel;
+
+            if (mainViewModel == null)
+            {
+                MessageBox.Show("MainViewModel is not available.");
+                return;
+            }
+            mainViewModel.UpdateViewCommand.Execute("Menu");
+        }
     }
 }
