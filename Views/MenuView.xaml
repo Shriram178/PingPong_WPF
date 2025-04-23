@@ -1,15 +1,16 @@
-﻿<Window x:Class="BounceBall.Views.MenuView"
+﻿<UserControl x:Class="BounceBall.Views.MenuView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BounceBall.Views"
         mc:Ignorable="d"
-        Title="MenuView" Height="450" Width="800">
-    <Window.Background>
-        <ImageBrush ImageSource="../Images/MenuBG.avif" />
-    </Window.Background>
-    <Window.Resources>
+        Focusable="True"
+        FocusManager.IsFocusScope="True">
+    <UserControl.Background>
+        <ImageBrush ImageSource="../Images/MenuBG.avif" Stretch="UniformToFill" />
+    </UserControl.Background>
+    <UserControl.Resources>
         <Style TargetType="TextBlock">
             <Setter Property="FontSize"
                     Value="24" />
@@ -26,14 +27,14 @@
                              AutoReverse="True"
                              RepeatBehavior="Forever" />
         </Storyboard>
-    </Window.Resources>
+    </UserControl.Resources>
     <Grid>
         <StackPanel VerticalAlignment="Center"
                     HorizontalAlignment="Center">
             <TextBlock Name="PlayText"
                        Text="Play"
                        MouseDown="PlayText_MouseDown"
-                       Margin="10" />
+                       Margin="10"/>
             <TextBlock Name="ProfileText"
                        Text="Profile"
                        MouseDown="ProfileText_MouseDown"
@@ -48,5 +49,5 @@
                        Margin="10" />
         </StackPanel>
     </Grid>
-</Window>
+</UserControl>
 

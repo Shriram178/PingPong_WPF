@@ -1,9 +1,8 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using BounceBall.Manager;
-using BounceBall.Models;
 using BounceBall.ViewModels;
 
 namespace BounceBall.Views
@@ -11,28 +10,38 @@ namespace BounceBall.Views
     /// <summary>
     /// Interaction logic for GameView.xaml
     /// </summary>
-    public partial class GameView : Window
+    public partial class GameView : UserControl, IKeyHandler
     {
         private GameViewModel _gameViewModel;
         private bool _isPaused;
         private bool _isMovingLeft;
         private bool _isMovingRight;
-        public GameView(User CurrentUser, GameDataManager gameDataManager)
+
+        public GameView()
         {
             InitializeComponent();
-            _gameViewModel = new GameViewModel(gameDataManager, CurrentUser.UserName);
-            DataContext = _gameViewModel;
-            this.KeyDown += OnKeyDown;
-            this.KeyUp += OnKeyUp;
-            this.SizeChanged += OnSizeChanged;
-            CompositionTarget.Rendering += OnRendering;
 
-            _gameViewModel.GameOver += OnGameOver;
+            // Subscribe to DataContextChanged to initialize the ViewModel when it's set
+            this.DataContextChanged += OnDataContextChanged;
+        }
 
-            // Set initial canvas dimensions
-            _gameViewModel.CanvasWidth = Playground.ActualWidth;
-            _gameViewModel.CanvasHeight = Playground.ActualHeight;
+        private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (e.NewValue is GameViewModel viewModel)
+            {
+                _gameViewModel = viewModel;
 
+                // Initialize event handlers and properties
+
+                this.SizeChanged += OnSizeChanged;
+                CompositionTarget.Rendering += OnRendering;
+
+                _gameViewModel.GameOver += OnGameOver;
+
+                // Set initial canvas dimensions
+                _gameViewModel.CanvasWidth = Playground.ActualWidth;
+                _gameViewModel.CanvasHeight = Playground.ActualHeight;
+            }
         }
 
 
@@ -42,7 +51,7 @@ namespace BounceBall.Views
             _gameViewModel.CanvasHeight = Playground.ActualHeight;
         }
 
-        private void OnKeyDown(object sender, KeyEventArgs e)
+        public void OnKeyDown(KeyEventArgs e)
         {
             if (e.Key == Key.Left)
             {
@@ -70,7 +79,7 @@ namespace BounceBall.Views
             }
         }
 
-        private void OnKeyUp(object sender, KeyEventArgs e)
+        public void OnKeyUp(KeyEventArgs e)
         {
             if (e.Key == Key.Left)
             {
@@ -120,7 +129,8 @@ namespace BounceBall.Views
                 Height = 400,
                 Title = "Settings"
             };
-            settingsWindow.Owner = this;
+
+            settingsWindow.Owner = Application.Current.MainWindow;
             settingsWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
 
             settingsWindow.Loaded += (s, e) =>

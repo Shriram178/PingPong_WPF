@@ -1,16 +1,13 @@
-﻿using System.ComponentModel;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 using BounceBall.Command;
 using BounceBall.Manager;
 using BounceBall.Models;
-using BounceBall.Views;
 
 namespace BounceBall.ViewModels
 {
-    public class LoginAndSignUpViewModel : INotifyPropertyChanged
+    public class LoginAndSignUpViewModel : BaseViewModel
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
         private string _username;
         private string _password;
         private string _confirmPassword;
@@ -63,17 +60,15 @@ namespace BounceBall.ViewModels
         {
             if (_userManager.ValidateUser(UserName, Password))
             {
-                User currentUser = _userManager.GetUser(UserName, Password);
-                MenuView menuView = new MenuView(currentUser);
-                var LoginWindow = obj as Window;
-                menuView.Owner = LoginWindow;
-                menuView.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-                menuView.Show();
+                //User user = _userManager.GetUser(UserName, Password);
+                _userManager.CurrentUser = _userManager.GetUser(UserName, Password);
+                var mainViewModel = Application.Current.MainWindow.DataContext as MainViewModel;
+
+                mainViewModel.UpdateViewCommand.Execute("Menu");
             }
             else
             {
                 MessageBox.Show("Log In Failed !!");
-
             }
         }
 
@@ -107,9 +102,5 @@ namespace BounceBall.ViewModels
             }
         }
 
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 }

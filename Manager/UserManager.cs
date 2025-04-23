@@ -6,6 +6,7 @@ namespace BounceBall.Manager
     {
         private readonly FileHandler _fileHandler;
         private List<User> _users = new List<User>();
+        public User CurrentUser { get; set; }
 
         public UserManager(FileHandler fileHandler)
         {
@@ -30,6 +31,12 @@ namespace BounceBall.Manager
         public User GetUser(string userName, string password)
         {
             return _users.First(u => u.UserName == userName && u.Password == password);
+        }
+
+
+        public void Logout()
+        {
+            CurrentUser = null;
         }
     }
 

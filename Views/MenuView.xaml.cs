@@ -3,26 +3,21 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using BounceBall.Manager;
-using BounceBall.Models;
+using BounceBall.ViewModels;
 
 namespace BounceBall.Views
 {
     /// <summary>
     /// Interaction logic for MenuView.xaml
     /// </summary>
-    public partial class MenuView : Window
+    public partial class MenuView : UserControl, IKeyHandler
     {
         private int selectedIndex = 0;
         private TextBlock[] menuItems;
-        private User _currentUser;
-        private GameDataManager _gameDataManager = new GameDataManager(new FileHandler());
-        public MenuView(User CurrentUser)
+        public MenuView()
         {
-            _currentUser = CurrentUser;
             InitializeComponent();
             menuItems = new TextBlock[] { PlayText, ProfileText, SettingsText, ExitText };
-            this.KeyDown += Window_KeyDown;
             HighlightText();
         }
 
@@ -46,7 +41,7 @@ namespace BounceBall.Views
             }
         }
 
-        private void Window_KeyDown(object sender, KeyEventArgs e)
+        public void OnKeyDown(KeyEventArgs e)
         {
             if (e.Key == Key.Down)
             {
@@ -60,21 +55,32 @@ namespace BounceBall.Views
             }
             else if (e.Key == Key.Enter)
             {
-                NavigateToWindow();
+                NavigateToPage();
             }
         }
 
-        private void NavigateToWindow()
+        public void OnKeyUp(KeyEventArgs e)
         {
+            // No specific KeyUp logic for MenuView
+        }
+
+        private void NavigateToPage()
+        {
+            var mainViewModel = Application.Current.MainWindow.DataContext as MainViewModel;
+
+            if (mainViewModel == null)
+            {
+                MessageBox.Show("MainViewModel is not available.");
+                return;
+            }
+
             switch (selectedIndex)
             {
                 case 0:
-                    GameView playWindow = new GameView(_currentUser, _gameDataManager);
-                    playWindow.Show();
+                    mainViewModel.UpdateViewCommand.Execute("Game");
                     break;
                 case 1:
-                    ProfileView profileWindow = new ProfileView(_currentUser, _gameDataManager);
-                    profileWindow.Show();
+                    mainViewModel.UpdateViewCommand.Execute("Profile");
                     break;
                 case 2:
                     MessageBox.Show("Settings");
@@ -88,25 +94,25 @@ namespace BounceBall.Views
         private void PlayText_MouseDown(object sender, MouseButtonEventArgs e)
         {
             selectedIndex = 0;
-            NavigateToWindow();
+            NavigateToPage();
         }
 
         private void ProfileText_MouseDown(object sender, MouseButtonEventArgs e)
         {
             selectedIndex = 1;
-            NavigateToWindow();
+            NavigateToPage();
         }
 
         private void SettingsText_MouseDown(object sender, MouseButtonEventArgs e)
         {
             selectedIndex = 2;
-            NavigateToWindow();
+            NavigateToPage();
         }
 
         private void ExitText_MouseDown(object sender, MouseButtonEventArgs e)
         {
             selectedIndex = 3;
-            NavigateToWindow();
+            NavigateToPage();
         }
 
 

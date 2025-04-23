@@ -1,15 +1,13 @@
 ﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
 using BounceBall.Manager;
 using BounceBall.Models;
 
 namespace BounceBall.ViewModels
 {
-    public class ProfileViewModel : INotifyPropertyChanged
+    public class ProfileViewModel : BaseViewModel
     {
         public ObservableCollection<GameData> GameHistory { get; set; }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
 
         public User CurrentUser { get; }
 

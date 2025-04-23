@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Media;
 using System.Windows.Threading;
 using BounceBall.Manager;
@@ -8,7 +6,7 @@ using BounceBall.Models;
 
 namespace BounceBall.ViewModels
 {
-    public class GameViewModel : INotifyPropertyChanged
+    public class GameViewModel : BaseViewModel
     {
         public event EventHandler GameOver;
         public BallModel Ball { get; set; }
@@ -114,10 +112,6 @@ namespace BounceBall.ViewModels
             IsRunning = true;
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged([CallerMemberName] string name = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
+
     }
 }

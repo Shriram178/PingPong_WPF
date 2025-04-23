@@ -1,7 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
-using BounceBall.Manager;
 using BounceBall.ViewModels;
 
 namespace BounceBall.Views
@@ -9,11 +8,10 @@ namespace BounceBall.Views
     /// <summary>
     /// Interaction logic for LoginAndSignUpView.xaml
     /// </summary>
-    public partial class LoginAndSignUpView : Window
+    public partial class LoginAndSignUpView : UserControl
     {
         public LoginAndSignUpView()
         {
-            this.DataContext = new LoginAndSignUpViewModel(new UserManager(new FileHandler()));
             InitializeComponent();
 
         }
@@ -51,11 +49,7 @@ namespace BounceBall.Views
             if (sender is PasswordBox passwordBox)
             {
                 var viewModel = DataContext as LoginAndSignUpViewModel;
-                if (passwordBox.Name == "PasswordLogin")
-                {
-                    viewModel.Password = passwordBox.Password;
-                }
-                else if (passwordBox.Name == "PasswordSignup")
+                if (passwordBox.Name == "PasswordLogin" || passwordBox.Name == "PasswordSignup")
                 {
                     viewModel.Password = passwordBox.Password;
                 }

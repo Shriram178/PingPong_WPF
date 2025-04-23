@@ -1,18 +1,14 @@
-﻿using System.Windows;
-using BounceBall.Manager;
-using BounceBall.Models;
-using BounceBall.ViewModels;
+﻿using System.Windows.Controls;
 
 namespace BounceBall.Views
 {
     /// <summary>
     /// Interaction logic for ProfileView.xaml
     /// </summary>
-    public partial class ProfileView : Window
+    public partial class ProfileView : UserControl
     {
-        public ProfileView(User currentUser, GameDataManager gameDataManager)
+        public ProfileView()
         {
-            this.DataContext = new ProfileViewModel(currentUser, gameDataManager);
             InitializeComponent();
         }
 

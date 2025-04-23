@@ -3,8 +3,7 @@
 namespace BounceBall.ViewModels
 {
 
-
-    class SettingsViewModel
+    class SettingsViewModel : BaseViewModel
     {
         public SettingsViewModel(BallModel ball, PaddleModel paddle)
         {
@@ -15,7 +14,6 @@ namespace BounceBall.ViewModels
         public BallModel Ball { get; set; }
 
         public PaddleModel Paddle { get; set; }
-
 
     }
 }
