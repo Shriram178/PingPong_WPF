@@ -1,10 +1,12 @@
 ﻿using System.Collections.ObjectModel;
+using BounceBall.Command;
 using BounceBall.Manager;
 using BounceBall.Models;
+using Caliburn.Micro;
 
 namespace BounceBall.ViewModels
 {
-    public class ProfileViewModel : BaseViewModel
+    public class ProfileViewModel : Screen
     {
         public ObservableCollection<GameData> GameHistory { get; set; }
 
@@ -15,12 +17,20 @@ namespace BounceBall.ViewModels
 
         public GameData HighScore { get; set; }
 
-        public ProfileViewModel(User currentUser, GameDataManager gameDataManager)
+        private readonly IEventAggregator _events;
+
+        public ProfileViewModel(IEventAggregator events, UserManager userManager, GameDataManager gameDataManager)
         {
-            CurrentUser = currentUser;
+            _events = events;
+            CurrentUser = userManager.CurrentUser;
             _gameDataManager = gameDataManager;
-            GameHistory = new ObservableCollection<GameData>(_gameDataManager.GetGameData(currentUser.UserName));
+            GameHistory = new ObservableCollection<GameData>(_gameDataManager.GetGameData(CurrentUser.UserName));
             HighScore = GetHighScoreGameData();
+        }
+
+        public async Task GoBack()
+        {
+            _events.PublishOnUIThreadAsync(new NavigateToMenuMessage());
         }
 
         public GameData GetHighScoreGameData()

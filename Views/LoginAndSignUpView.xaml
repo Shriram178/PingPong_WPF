@@ -52,8 +52,7 @@
                              />
             </Grid>
             <Button Content="Login"
-                    Command="{Binding LoginCommand}"
-                    CommandParameter="{x:Reference Name=LoginAndSignUpViewWindow}"
+                   x:Name="Login"
                     Margin="10" />
             <Button Content="Go to Signup"
                     Click="ShowSignupPanel"
@@ -99,7 +98,7 @@
                        HorizontalAlignment="Center"
                        Margin="10" />
             <Button Content="Signup"
-                    Command="{Binding SignUpCommand}"
+                    x:Name="SignUp"
                     Margin="10" />
             <Button Content="Go to Login"
                     Click="ShowLoginPanel"

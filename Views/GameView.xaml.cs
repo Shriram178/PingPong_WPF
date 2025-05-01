@@ -2,7 +2,6 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
 using BounceBall.ViewModels;
 
 namespace BounceBall.Views
@@ -70,7 +69,7 @@ namespace BounceBall.Views
                 else
                 {
                     PauseGame();
-                    OpenSettings();
+                    _gameViewModel.OpenSettings();
                 }
             }
             else if (e.Key == Key.Enter && !_gameViewModel.IsRunning)
@@ -118,43 +117,43 @@ namespace BounceBall.Views
             _isPaused = false;
         }
 
-        private void OpenSettings()
-        {
-            var settingsView = new SettingsView { DataContext = new SettingsViewModel(_gameViewModel.Ball, _gameViewModel.Paddle) };
-            var settingsWindow = new Window
-            {
-                WindowStyle = WindowStyle.None,
-                Content = settingsView,
-                Width = 400,
-                Height = 400,
-                Title = "Settings"
-            };
+        //private void OpenSettings()
+        //{
+        //    var settingsView = new SettingsView { DataContext = new SettingsViewModel(_gameViewModel) };
+        //    var settingsWindow = new Window
+        //    {
+        //        WindowStyle = WindowStyle.None,
+        //        Content = settingsView,
+        //        Width = 400,
+        //        Height = 400,
+        //        Title = "Settings"
+        //    };
 
-            settingsWindow.Owner = Application.Current.MainWindow;
-            settingsWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+        //    settingsWindow.Owner = Application.Current.MainWindow;
+        //    settingsWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
 
-            settingsWindow.Loaded += (s, e) =>
-            {
-                var storyboard = (Storyboard)settingsView.FindResource("PauseAnimation");
-                storyboard.Begin();
-            };
+        //    settingsWindow.Loaded += (s, e) =>
+        //    {
+        //        var storyboard = (Storyboard)settingsView.FindResource("PauseAnimation");
+        //        storyboard.Begin();
+        //    };
 
-            settingsWindow.KeyDown += (s, e) =>
-            {
-                if (e.Key == Key.Escape)
-                {
-                    var storyboard = (Storyboard)settingsView.FindResource("ResumeAnimation");
-                    storyboard.Completed += (s2, e2) =>
-                    {
-                        settingsWindow.Close();
-                        ResumeGame();
-                    };
-                    storyboard.Begin(settingsView);
-                }
-            };
+        //    settingsWindow.KeyDown += (s, e) =>
+        //    {
+        //        if (e.Key == Key.Escape)
+        //        {
+        //            var storyboard = (Storyboard)settingsView.FindResource("ResumeAnimation");
+        //            storyboard.Completed += (s2, e2) =>
+        //            {
+        //                settingsWindow.Close();
+        //                ResumeGame();
+        //            };
+        //            storyboard.Begin(settingsView);
+        //        }
+        //    };
 
-            settingsWindow.ShowDialog();
-        }
+        //    settingsWindow.ShowDialog();
+        //}
 
 
         private void RestartGame()

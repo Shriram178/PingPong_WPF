@@ -68,11 +68,11 @@
             <Button Content="Back"
                     Width="100"
                     Margin="5"
-                    Click="GoBack" />
+                    x:Name="GoBack"/>
             <Button Content="Restart"
                     Width="100"
-                    Margin="5"
-                    Click="Restart"/>
+                    x:Name="Restart"
+                    Margin="5"/>
         </StackPanel>
     </StackPanel>
 </UserControl>

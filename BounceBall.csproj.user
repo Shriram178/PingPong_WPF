@@ -13,7 +13,7 @@
     <Compile Update="Views\LoginAndSignUpView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\MainWindow.xaml.cs">
+    <Compile Update="Views\ShellView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\MenuView.xaml.cs">
@@ -33,7 +33,7 @@
     <Page Update="Views\LoginAndSignUpView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\MainWindow.xaml">
+    <Page Update="Views\ShellView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\MenuView.xaml">

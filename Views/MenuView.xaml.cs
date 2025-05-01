@@ -66,21 +66,22 @@ namespace BounceBall.Views
 
         private void NavigateToPage()
         {
-            var mainViewModel = Application.Current.MainWindow.DataContext as MainViewModel;
 
-            if (mainViewModel == null)
-            {
-                MessageBox.Show("MainViewModel is not available.");
-                return;
-            }
+
 
             switch (selectedIndex)
             {
                 case 0:
-                    mainViewModel.UpdateViewCommand.Execute("Game");
+                    if (DataContext is MenuViewModel menuViewModel)
+                    {
+                        menuViewModel.GoToGame();
+                    }
                     break;
                 case 1:
-                    mainViewModel.UpdateViewCommand.Execute("Profile");
+                    if (DataContext is MenuViewModel menuViewModel1)
+                    {
+                        menuViewModel1.GoToProfile();
+                    }
                     break;
                 case 2:
                     MessageBox.Show("Settings");

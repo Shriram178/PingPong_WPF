@@ -1,12 +1,14 @@
 ﻿using System.Windows;
 using System.Windows.Media;
 using System.Windows.Threading;
+using BounceBall.Command;
 using BounceBall.Manager;
 using BounceBall.Models;
+using Caliburn.Micro;
 
 namespace BounceBall.ViewModels
 {
-    public class GameViewModel : BaseViewModel
+    public class GameViewModel : Screen
     {
         public event EventHandler GameOver;
         public BallModel Ball { get; set; }
@@ -22,15 +24,21 @@ namespace BounceBall.ViewModels
 
         private DateTime _currentGameStartTime;
 
-        public int Score { get => _score; set { _score = value; OnPropertyChanged(); } }
-        public bool IsRunning { get => _isRunning; set { _isRunning = value; OnPropertyChanged(); } }
-        public double CanvasWidth { get => _canvasWidth; set { _canvasWidth = value; OnPropertyChanged(); } }
-        public double CanvasHeight { get => _canvasHeight; set { _canvasHeight = value; OnPropertyChanged(); } }
+        public int Score { get => _score; set { _score = value; NotifyOfPropertyChange(); } }
+        public bool IsRunning { get => _isRunning; set { _isRunning = value; NotifyOfPropertyChange(); } }
+        public double CanvasWidth { get => _canvasWidth; set { _canvasWidth = value; NotifyOfPropertyChange(); } }
+        public double CanvasHeight { get => _canvasHeight; set { _canvasHeight = value; NotifyOfPropertyChange(); } }
 
-        public GameViewModel(GameDataManager gameDataManager, string currentUsername)
+        private readonly IEventAggregator _events;
+
+        private readonly IWindowManager _windowManager;
+
+        public GameViewModel(IWindowManager windowManager, IEventAggregator events, GameDataManager gameDataManager, UserManager userManager)
         {
+            _windowManager = windowManager;
+            _events = events;
             _gameDataManager = gameDataManager;
-            _currentUsername = currentUsername;
+            _currentUsername = userManager.CurrentUser.UserName;
             Ball = new BallModel { X = 100, Y = 100, SpeedX = 5, SpeedY = 5, Size = 15, Color = Brushes.Red };
             Paddle = new PaddleModel { X = 350, Width = 100 };
             _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(1) };
@@ -81,6 +89,20 @@ namespace BounceBall.ViewModels
             }
         }
 
+        public void OpenSettings()
+        {
+            _windowManager.ShowDialogAsync(new SettingsViewModel(this));
+        }
+
+        public async Task GoBack()
+        {
+            await _events.PublishOnUIThreadAsync(new NavigateToMenuMessage());
+        }
+
+        public async Task ReloadPage()
+        {
+            await _events.PublishOnUIThreadAsync(new NavigateToGameMessage());
+        }
 
         public void Pause()
         {

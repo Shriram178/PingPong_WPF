@@ -2,20 +2,17 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using BounceBall.ViewModels;
 
 namespace BounceBall.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class ShellView : Window
     {
-        public MainWindow()
+        public ShellView()
         {
             InitializeComponent();
-            this.DataContext = new MainViewModel();
-
         }
 
         private void MainWindow_KeyDown(object sender, KeyEventArgs e)
@@ -39,7 +36,7 @@ namespace BounceBall.Views
         private object GetActiveView()
         {
             // Find the ContentPresenter within the ContentControl
-            var contentPresenter = FindVisualChild<ContentPresenter>(MainFrame);
+            var contentPresenter = FindVisualChild<ContentPresenter>(ActiveItem);
 
             if (contentPresenter != null)
             {

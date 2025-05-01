@@ -1,40 +1,42 @@
 ﻿using System.Windows;
-using System.Windows.Input;
 using BounceBall.Command;
 using BounceBall.Manager;
 using BounceBall.Models;
+using Caliburn.Micro;
 
 namespace BounceBall.ViewModels
 {
-    public class LoginAndSignUpViewModel : BaseViewModel
+    public class LoginAndSignUpViewModel : Screen
     {
         private string _username;
         private string _password;
         private string _confirmPassword;
         private UserManager _userManager;
+        private readonly IEventAggregator _events;
 
-        public ICommand LoginCommand { get; }
-        public ICommand SignUpCommand { get; }
+        //public ICommand LoginCommand { get; }
+        //public ICommand SignUpCommand { get; }
 
-        public LoginAndSignUpViewModel(UserManager userManager)
+        public LoginAndSignUpViewModel(IEventAggregator events, UserManager userManager)
         {
-            LoginCommand = new RelayCommand(Login, CanLogin);
-            SignUpCommand = new RelayCommand(Signup, CanSignUp);
+            _events = events;
+            //LoginCommand = new RelayCommand(Login, CanLogin);
+            //SignUpCommand = new RelayCommand(Signup, CanSignUp);
             _userManager = userManager;
         }
 
-        private bool CanSignUp(object obj)
+        public bool CanSignUp()
         {
             return true;
         }
 
-        private bool CanLogin(object obj)
+        public bool CanLogin()
         {
             return true;
         }
 
 
-        private void Signup(object obj)
+        public void Signup()
         {
             try
             {
@@ -56,15 +58,13 @@ namespace BounceBall.ViewModels
 
         }
 
-        private void Login(object obj)
+        public async Task Login()
         {
             if (_userManager.ValidateUser(UserName, Password))
             {
-                //User user = _userManager.GetUser(UserName, Password);
                 _userManager.CurrentUser = _userManager.GetUser(UserName, Password);
-                var mainViewModel = Application.Current.MainWindow.DataContext as MainViewModel;
+                await _events.PublishOnUIThreadAsync(new NavigateToMenuMessage());
 
-                mainViewModel.UpdateViewCommand.Execute("Menu");
             }
             else
             {
@@ -78,7 +78,7 @@ namespace BounceBall.ViewModels
             set
             {
                 _username = value;
-                OnPropertyChanged(nameof(UserName));
+                NotifyOfPropertyChange(nameof(UserName));
             }
         }
 
@@ -88,7 +88,7 @@ namespace BounceBall.ViewModels
             set
             {
                 _password = value;
-                OnPropertyChanged(nameof(Password));
+                NotifyOfPropertyChange(nameof(Password));
             }
         }
 
@@ -98,7 +98,7 @@ namespace BounceBall.ViewModels
             set
             {
                 _confirmPassword = value;
-                OnPropertyChanged(nameof(ConfirmPassword));
+                NotifyOfPropertyChange(nameof(ConfirmPassword));
             }
         }
 
