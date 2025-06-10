@@ -72,6 +72,11 @@
                      Margin="10"
                      />
             <Grid Margin="10">
+                <TextBox x:Name="Email"
+                         Text="Email"
+                         Foreground="Gray" />
+            </Grid>
+            <Grid Margin="10">
                 <TextBox x:Name="PasswordPlaceholderSignup"
                          Text="Password"
                          Foreground="Gray"

@@ -1,36 +1,105 @@
-﻿using BounceBall.Models;
+﻿using System.Net.Http;
+using System.Net.Http.Json;
+using BounceBall.Models;
+using static BounceBall.Models.User;
 
 namespace BounceBall.Manager
 {
     public class GameDataManager
     {
+        private readonly HttpClient _httpClient;
         private readonly FileHandler _fileHandler;
+        private readonly UserManager _userManager;
         private List<GameData> _gameData;
 
-        public GameDataManager(FileHandler fileHandler)
+        public GameDataManager(FileHandler fileHandler, UserManager userManager)
         {
-            _fileHandler = fileHandler;
+
+            _userManager = userManager;
+            _httpClient = _userManager.AuthenticatedClient;
             _gameData = new List<GameData>();
+
+
         }
 
-        public List<GameData> GetGameData(string username)
+        public async Task<List<GameData>> GetGameDataAsync(
+            int pageIndex = 0,
+            int pageSize = 10,
+            string sortColumn = "Id",
+            string sortOrder = "DESC")
         {
-            if (_gameData.Count == 0)
+            try
             {
-                // Load game data from the file only if the in-memory list is empty
-                _gameData = _fileHandler.LoadGameData(username);
+                var query = $"api/GameScore/my-scores?PageIndex={pageIndex}" +
+                    $"&PageSize={pageSize}" +
+                    $"&SortColumn={sortColumn}&SortOrder={sortOrder}";
+
+                var response = await _httpClient.GetAsync(query);
+                response.EnsureSuccessStatusCode();
+
+                var result = await response.Content.ReadFromJsonAsync<RestDto<GameScoreDto[]>>();
+
+                if (result?.Data == null) return new List<GameData>();
+
+                _gameData = result.Data
+                    .Select(dto => new GameData
+                    {
+                        Score = dto.Score,
+                        Duration = dto.Duration,
+                        PlayedAt = dto.PlayedAt
+                    }).ToList();
+
+                return _gameData;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to load game data: {ex.Message}");
+                return new List<GameData>();
+            }
+        }
+
+
+        public async Task AddGameData(string username, GameData gameData)
+        {
+            try
+            {
+                var gameDataRequest = new { score = gameData.Score, duration = gameData.Duration };
+                using var response = await _httpClient.PostAsJsonAsync("api/GameScore/submit", gameDataRequest);
+
+                response.EnsureSuccessStatusCode();
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine($"Failed to add game data: {ex.Message}");
+            }
+            catch (TaskCanceledException ex)
+            {
+                Console.WriteLine($"Request timed out: {ex.Message}");
             }
 
-            return _gameData;
         }
 
-        public void AddGameData(string username, GameData gameData)
+        public async Task<List<LeaderboardEntry>> GetLeaderboardsAsync(
+            int pageIndex = 0,
+            int pageSize = 10,
+            string sortColumn = "BestScore",
+            string sortOrder = "DESC")
         {
-            // Add the new game data to the in-memory list
-            _gameData.Add(gameData);
-
-            // Save the updated game data back to the file
-            _fileHandler.SaveGameData(username, _gameData);
+            try
+            {
+                var query = $"api/leaderboard/top?PageIndex={pageIndex}" +
+                    $"&PageSize={pageSize}" +
+                    $"&SortColumn={sortColumn}&SortOrder={sortOrder}";
+                var response = await _httpClient.GetAsync(query);
+                response.EnsureSuccessStatusCode();
+                var result = await response.Content.ReadFromJsonAsync<RestDto<LeaderboardEntry[]>>();
+                return result?.Data?.ToList() ?? new List<LeaderboardEntry>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to load leaderboards: {ex.Message}");
+                return new List<LeaderboardEntry>();
+            }
         }
     }
 }

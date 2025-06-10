@@ -1,7 +1,6 @@
 ﻿using System.Windows;
 using BounceBall.Command;
 using BounceBall.Manager;
-using BounceBall.Models;
 using Caliburn.Micro;
 
 namespace BounceBall.ViewModels
@@ -9,6 +8,7 @@ namespace BounceBall.ViewModels
     public class LoginAndSignUpViewModel : Screen
     {
         private string _username;
+        private string _emial;
         private string _password;
         private string _confirmPassword;
         private UserManager _userManager;
@@ -36,13 +36,18 @@ namespace BounceBall.ViewModels
         }
 
 
-        public void Signup()
+        public async void Signup()
         {
             try
             {
                 if (Password == ConfirmPassword)
                 {
-                    _userManager.AddUser(new User(UserName, Password));
+                    var isRegistered = await _userManager.RegisterAsync(UserName, Password, Email);
+                    if (!isRegistered)
+                    {
+                        MessageBox.Show("Error : Cannot create account");
+                        return;
+                    }
                     MessageBox.Show($"Account for {UserName} created !!");
                 }
                 else
@@ -60,9 +65,8 @@ namespace BounceBall.ViewModels
 
         public async Task Login()
         {
-            if (_userManager.ValidateUser(UserName, Password))
+            if (await _userManager.LoginAsync(UserName, Password))
             {
-                _userManager.CurrentUser = _userManager.GetUser(UserName, Password);
                 await _events.PublishOnUIThreadAsync(new NavigateToMenuMessage());
 
             }
@@ -75,31 +79,25 @@ namespace BounceBall.ViewModels
         public string UserName
         {
             get => _username;
-            set
-            {
-                _username = value;
-                NotifyOfPropertyChange(nameof(UserName));
-            }
+            set => Set(ref _username, value);
+        }
+
+        public string Email
+        {
+            get => _emial;
+            set => Set(ref _emial, value);
         }
 
         public string Password
         {
             get => _password;
-            set
-            {
-                _password = value;
-                NotifyOfPropertyChange(nameof(Password));
-            }
+            set => Set(ref _password, value);
         }
 
         public string ConfirmPassword
         {
             get => _confirmPassword;
-            set
-            {
-                _confirmPassword = value;
-                NotifyOfPropertyChange(nameof(ConfirmPassword));
-            }
+            set => Set(ref _confirmPassword, value);
         }
 
     }

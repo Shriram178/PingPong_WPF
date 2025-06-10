@@ -2,14 +2,15 @@
 
 namespace BounceBall.Models
 {
-    public class User
+    public partial class User
     {
         public User() { }
 
-        public User(string name, string password)
+        public User(string name, string password, string eamil)
         {
             UserName = name;
             Password = password;
+            Email = eamil;
         }
 
         [Name("UserName")]
@@ -17,5 +18,8 @@ namespace BounceBall.Models
 
         [Name("Password")]
         public string Password { get; set; }
+
+        public string Email { get; set; }
+
     }
 }

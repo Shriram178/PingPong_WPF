@@ -17,7 +17,7 @@ namespace BounceBall.Views
         public MenuView()
         {
             InitializeComponent();
-            menuItems = new TextBlock[] { PlayText, ProfileText, SettingsText, ExitText };
+            menuItems = new TextBlock[] { PlayText, ProfileText, LeaderboardText, SettingsText, ExitText };
             HighlightText();
         }
 
@@ -83,10 +83,17 @@ namespace BounceBall.Views
                         menuViewModel1.GoToProfile();
                     }
                     break;
+
                 case 2:
-                    MessageBox.Show("Settings");
+                    if (DataContext is MenuViewModel menuViewModel2)
+                    {
+                        menuViewModel2.GoToLeaderboard();
+                    }
                     break;
                 case 3:
+                    MessageBox.Show("Settings");
+                    break;
+                case 4:
                     Application.Current.Shutdown();
                     break;
             }
@@ -106,16 +113,20 @@ namespace BounceBall.Views
 
         private void SettingsText_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            selectedIndex = 2;
+            selectedIndex = 3;
             NavigateToPage();
         }
 
         private void ExitText_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            selectedIndex = 3;
+            selectedIndex = 4;
             NavigateToPage();
         }
 
-
+        private void LeadeerboardText_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            selectedIndex = 2;
+            NavigateToPage();
+        }
     }
 }

@@ -43,5 +43,10 @@ namespace BounceBall.ViewModels
         {
             _events.PublishOnUIThreadAsync(new NavigateToLoginMessage());
         }
+
+        public async Task GoToLeaderboard()
+        {
+            _events.PublishOnUIThreadAsync(new NavigateToLeaderboardMessage());
+        }
     }
 }

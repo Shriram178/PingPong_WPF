@@ -12,4 +12,7 @@
     class NavigateToGameMessage
     {
     }
+
+    class NavigateToLeaderboardMessage
+    { }
 }

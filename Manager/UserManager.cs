@@ -1,43 +1,140 @@
-﻿using BounceBall.Models;
+﻿using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
+using System.Text.Json.Serialization;
+using BounceBall.Models;
 
 namespace BounceBall.Manager
 {
-    public class UserManager
+    public class UserManager : IDisposable
     {
-        private readonly FileHandler _fileHandler;
-        private List<User> _users = new List<User>();
-        public User CurrentUser { get; set; }
+        private readonly HttpClient _httpClient;
+        private bool _disposed = false;
 
-        public UserManager(FileHandler fileHandler)
+        public User CurrentUser { get; private set; }
+        public string AccessToken { get; private set; }
+
+        public UserManager()
         {
-            _fileHandler = fileHandler;
-            _users = _fileHandler.LoadUsers();
+            // Configure HttpClient properly
+            _httpClient = new HttpClient()
+            {
+                BaseAddress = new Uri("http://localhost:5003/"),
+                Timeout = TimeSpan.FromSeconds(30)
+            };
+            _httpClient.DefaultRequestHeaders.Accept.Clear();
+            _httpClient.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
-        public void AddUser(User user)
-        {
-            if (_users.Any(u => u.UserName == user.UserName))
-                throw new InvalidOperationException($"User with the username {user.UserName} already exists.");
+        public HttpClient AuthenticatedClient => _httpClient;
 
-            _users.Add(user);
-            _fileHandler.SaveUsers(_users);
+        public async Task<bool> RegisterAsync(string username, string password, string email)
+        {
+            try
+            {
+                var user = new { username = username, email = email, password = password };
+                using var response = await _httpClient.PostAsJsonAsync("api/users/register", user);
+
+                response.EnsureSuccessStatusCode();
+                return true;
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine($"Registration failed: {ex.Message}");
+                return false;
+            }
+            catch (TaskCanceledException ex)
+            {
+                Console.WriteLine($"Registration timeout: {ex.Message}");
+                return false;
+            }
         }
 
-        public bool ValidateUser(string username, string password)
+        public async Task<bool> LoginAsync(string username, string password)
         {
-            return _users.Any(u => u.UserName == username && u.Password == password);
-        }
+            try
+            {
+                var loginRequest = new { Username = username, Password = password };
+                using var response = await _httpClient.PostAsJsonAsync("api/users/login", loginRequest);
 
-        public User GetUser(string userName, string password)
-        {
-            return _users.First(u => u.UserName == userName && u.Password == password);
-        }
+                response.EnsureSuccessStatusCode();
 
+                var loginResponse = await response.Content.ReadFromJsonAsync<LoginResponse>();
+                if (loginResponse == null || string.IsNullOrEmpty(loginResponse.AccessToken))
+                {
+                    Console.WriteLine("Invalid login response");
+                    return false;
+                }
+
+                AccessToken = loginResponse.AccessToken;
+                _httpClient.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", AccessToken);
+
+                // Get user details
+                using var userResponse = await _httpClient.GetAsync("api/users/me");
+                userResponse.EnsureSuccessStatusCode();
+
+                CurrentUser = await userResponse.Content.ReadFromJsonAsync<User>();
+                return CurrentUser != null;
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine($"Login failed: {ex.Message}");
+                return false;
+            }
+            catch (TaskCanceledException ex)
+            {
+                Console.WriteLine($"Login timeout: {ex.Message}");
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error during login: {ex.Message}");
+                return false;
+            }
+        }
 
         public void Logout()
         {
             CurrentUser = null;
+            AccessToken = null;
+            _httpClient.DefaultRequestHeaders.Authorization = null;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    _httpClient?.Dispose();
+                }
+                _disposed = true;
+            }
         }
     }
 
+
+    // Response model for login
+    public class LoginResponse
+    {
+        [JsonPropertyName("access_token")]
+        public string AccessToken { get; set; }
+
+        [JsonPropertyName("expires_in")]
+        public int ExpiresIn { get; set; }
+
+        [JsonPropertyName("refresh_token")]
+        public string RefreshToken { get; set; }
+
+        [JsonPropertyName("token_type")]
+        public string TokenType { get; set; }
+    }
 }

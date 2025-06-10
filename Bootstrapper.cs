@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Net.Http;
+using System.Windows;
 using BounceBall.Manager;
 using BounceBall.ViewModels;
 using Caliburn.Micro;
@@ -16,7 +17,11 @@ namespace BounceBall
         protected override void Configure()
         {
             var container = new SimpleContainer();
-            //Container.Instance(Container);
+            var httpClient = new HttpClient
+            {
+                BaseAddress = new Uri("https://localhost:5003/")
+            };
+            container.Singleton<HttpClient>();
             container.Singleton<IWindowManager, WindowManager>();
 
             container.Singleton<IEventAggregator, EventAggregator>();
@@ -29,6 +34,7 @@ namespace BounceBall
             container.PerRequest<MenuViewModel>();
             container.PerRequest<ProfileViewModel>();
             container.PerRequest<SettingsViewModel>();
+            container.PerRequest<LeaderboardViewModel>();
 
             Container = container;
         }

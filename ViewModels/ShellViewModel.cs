@@ -5,7 +5,7 @@ using Caliburn.Micro;
 
 namespace BounceBall.ViewModels
 {
-    public class ShellViewModel : Conductor<object>, IHandle<NavigateToGameMessage>, IHandle<NavigateToMenuMessage>, IHandle<NavigateToProfileMessage>, IHandle<NavigateToLoginMessage>
+    public class ShellViewModel : Conductor<object>, IHandle<NavigateToGameMessage>, IHandle<NavigateToMenuMessage>, IHandle<NavigateToProfileMessage>, IHandle<NavigateToLoginMessage>, IHandle<NavigateToLeaderboardMessage>
     {
         private readonly IEventAggregator _events;
 
@@ -54,6 +54,15 @@ namespace BounceBall.ViewModels
             {
                 // Navigate to profile
                 await ActivateItemAsync(IoC.Get<ProfileViewModel>());
+            }
+        }
+
+        async Task IHandle<NavigateToLeaderboardMessage>.HandleAsync(NavigateToLeaderboardMessage message, CancellationToken cancellationToken)
+        {
+            if (_userManager.CurrentUser != null)
+            {
+                // Navigate to profile
+                await ActivateItemAsync(IoC.Get<LeaderboardViewModel>());
             }
         }
 

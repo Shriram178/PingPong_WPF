@@ -24,7 +24,7 @@
                    Fill="Blue"
                    Canvas.Top="{Binding CanvasHeight, Converter={StaticResource BottomOffsetConverter}}"
                    Canvas.Left="{Binding Paddle.X}" />
-        <TextBlock Text="{Binding Score}"
+        <TextBlock x:Name="Score"
                    FontSize="20"
                    Canvas.Left="10"
                    Canvas.Top="10" />

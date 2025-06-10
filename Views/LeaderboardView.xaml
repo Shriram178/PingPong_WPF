@@ -1,0 +1,89 @@
+﻿<UserControl x:Class="BounceBall.Views.LeaderboardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BounceBall.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <StackPanel Margin="20">
+        <!-- Header -->
+        <DockPanel Margin="0,0,0,10">
+            <TextBlock Text="🏆 Leaderboard"
+                       FontSize="28"
+                       FontWeight="Bold"
+                       DockPanel.Dock="Left" />
+            <Button Content="⟵ Back"
+                    x:Name="GoBack"
+                    Width="100"
+                    HorizontalAlignment="Right"
+                    DockPanel.Dock="Right" />
+        </DockPanel>
+        <!-- Filters -->
+        <GroupBox Header="Filters"
+                  Margin="0,0,0,10"
+                  Padding="10">
+            <UniformGrid Columns="5"
+                         Rows="1"
+                         HorizontalAlignment="Left">
+                <StackPanel>
+                    <TextBlock Text="Sort By"
+                               Margin="0,0,0,5" />
+                    <ComboBox ItemsSource="{Binding SortColumns}"
+                              SelectedItem="{Binding SelectedSortColumn}"
+                              Width="120" />
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="Order"
+                               Margin="0,0,0,5" />
+                    <ComboBox ItemsSource="{Binding SortOrders}"
+                              SelectedItem="{Binding SelectedSortOrder}"
+                              Width="100" />
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="Page Size"
+                               Margin="0,0,0,5" />
+                    <TextBox Text="{Binding PageSize, UpdateSourceTrigger=PropertyChanged}"
+                             Width="60" />
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="Filter"
+                               Margin="0,0,0,5" />
+                    <TextBox Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}"
+                             Width="150" />
+                </StackPanel>
+            </UniformGrid>
+        </GroupBox>
+        <!-- DataGrid -->
+        <DataGrid ItemsSource="{Binding LeaderboardEntries}"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  Margin="0,0,0,10"
+                  Height="300">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Username"
+                                    Binding="{Binding Username}" />
+                <DataGridTextColumn Header="Best Score"
+                                    Binding="{Binding BestScore}" />
+                <DataGridTextColumn Header="Average Score"
+                                    Binding="{Binding AverageScore}" />
+                <DataGridTextColumn Header="Games Played"
+                                    Binding="{Binding TotalGamesPlayed}" />
+            </DataGrid.Columns>
+        </DataGrid>
+        <!-- Pagination -->
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Center">
+            <Button Content="◀ Previous"
+                    x:Name="PrevPage"
+                    Margin="5" />
+            <TextBlock Text="{Binding PageIndex}"
+                       FontWeight="Bold"
+                       VerticalAlignment="Center"
+                       Margin="10,0" />
+            <Button Content="Next ▶"
+                    x:Name="NextPage"
+                    Margin="5" />
+        </StackPanel>
+    </StackPanel>
+</UserControl>

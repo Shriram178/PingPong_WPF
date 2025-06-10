@@ -39,6 +39,10 @@
                        Text="Profile"
                        MouseDown="ProfileText_MouseDown"
                        Margin="10" />
+            <TextBlock Name="LeaderboardText"
+                       Text="LeaderBoard"
+                       MouseDown="LeadeerboardText_MouseDown"
+                       Margin="10" />
             <TextBlock Name="SettingsText"
                        Text="Settings"
                        MouseDown="SettingsText_MouseDown"

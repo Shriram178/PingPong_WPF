@@ -5,37 +5,72 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BounceBall.Views"
         mc:Ignorable="d">
-    <Grid Margin="10">
-        <!-- Define Rows -->
+    <Grid Margin="20"
+          Background="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <!-- Back Button -->
-            <RowDefinition Height="Auto" />
             <!-- Header -->
+            <RowDefinition Height="Auto" />
+            <!-- Filters -->
             <RowDefinition Height="Auto" />
             <!-- High Score -->
             <RowDefinition Height="*" />
             <!-- Game History -->
+            <RowDefinition Height="Auto" />
+            <!-- Pagination -->
         </Grid.RowDefinitions>
-        <!-- Define Columns -->
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-        <!-- Back Button Section -->
-        <Button Content="Back"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Margin="0,0,0,10"
-                x:Name="GoBack" />
-        <!-- Header Section -->
-        <TextBlock Grid.Row="1"
-                   Text="{Binding CurrentUser.UserName}"
-                   FontSize="24"
-                   FontWeight="Bold"
-                   Foreground="#333"
-                   HorizontalAlignment="Left"
-                   VerticalAlignment="Center"
-                   Margin="0,0,0,10" />
+        <!-- Header and Back Button -->
+        <DockPanel Grid.Row="0"
+                   Margin="0,0,0,10">
+            <Button Content="⟵ Back"
+                    x:Name="GoBack"
+                    Margin="0,0,10,0"
+                    VerticalAlignment="Center"
+                    Padding="8,2" />
+            <TextBlock Text="{Binding CurrentUser.UserName}"
+                       FontSize="24"
+                       FontWeight="Bold"
+                       Foreground="#333"
+                       VerticalAlignment="Center" />
+        </DockPanel>
+        <!-- Filters Section -->
+        <GroupBox Header="Filters"
+                  Grid.Row="1"
+                  Margin="0,0,0,10"
+                  Padding="10"
+                  Background="#f9f9f9"
+                  BorderBrush="#ccc">
+            <UniformGrid Columns="6"
+                         Rows="1"
+                         Margin="0">
+                <StackPanel>
+                    <TextBlock Text="Sort By"
+                               Margin="0,0,0,5" />
+                    <ComboBox ItemsSource="{Binding SortColumns}"
+                              SelectedItem="{Binding SelectedSortColumn}"
+                              Width="120" />
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="Order"
+                               Margin="0,0,0,5" />
+                    <ComboBox ItemsSource="{Binding SortOrders}"
+                              SelectedItem="{Binding SelectedSortOrder}"
+                              Width="100" />
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="Page Size"
+                               Margin="0,0,0,5" />
+                    <TextBox Text="{Binding PageSize, UpdateSourceTrigger=PropertyChanged}"
+                             Width="60" />
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="Filter"
+                               Margin="0,0,0,5" />
+                    <TextBox Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}"
+                             Width="150" />
+                </StackPanel>
+            </UniformGrid>
+        </GroupBox>
         <!-- High Score Section -->
         <GroupBox Header="High Score"
                   Grid.Row="2"
@@ -43,12 +78,11 @@
                   FontWeight="Bold"
                   Foreground="#444"
                   BorderBrush="#cdcdcd"
-                  Background="White"
+                  Background="#fdfdfd"
                   Padding="10"
-                  Margin="0,10,0,10">
+                  Margin="0,0,0,10">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -58,41 +92,26 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Text="Score:"
-                           FontWeight="Bold"
                            Grid.Row="0"
                            Grid.Column="0"
-                           VerticalAlignment="Center" />
+                           FontWeight="Bold" />
                 <TextBlock Text="{Binding HighScore.Score}"
                            Grid.Row="0"
-                           Grid.Column="1"
-                           VerticalAlignment="Center" />
+                           Grid.Column="1" />
                 <TextBlock Text="Start Time:"
-                           FontWeight="Bold"
                            Grid.Row="1"
                            Grid.Column="0"
-                           VerticalAlignment="Center" />
-                <TextBlock Text="{Binding HighScore.StartTime}"
+                           FontWeight="Bold" />
+                <TextBlock Text="{Binding HighScore.PlayedAt}"
                            Grid.Row="1"
-                           Grid.Column="1"
-                           VerticalAlignment="Center" />
-                <TextBlock Text="End Time:"
-                           FontWeight="Bold"
-                           Grid.Row="2"
-                           Grid.Column="0"
-                           VerticalAlignment="Center" />
-                <TextBlock Text="{Binding HighScore.EndTime}"
-                           Grid.Row="2"
-                           Grid.Column="1"
-                           VerticalAlignment="Center" />
+                           Grid.Column="1" />
                 <TextBlock Text="Duration:"
-                           FontWeight="Bold"
-                           Grid.Row="3"
+                           Grid.Row="2"
                            Grid.Column="0"
-                           VerticalAlignment="Center" />
+                           FontWeight="Bold" />
                 <TextBlock Text="{Binding HighScore.Duration}"
-                           Grid.Row="3"
-                           Grid.Column="1"
-                           VerticalAlignment="Center" />
+                           Grid.Row="2"
+                           Grid.Column="1" />
             </Grid>
         </GroupBox>
         <!-- Game History Section -->
@@ -103,7 +122,8 @@
                   Foreground="#444"
                   BorderBrush="#cdcdcd"
                   Background="White"
-                  Padding="10">
+                  Padding="10"
+                  Margin="0,0,0,10">
             <ListView Name="UserList"
                       ItemsSource="{Binding GameHistory}"
                       BorderBrush="#cdcdcd"
@@ -114,14 +134,30 @@
                         <GridViewColumn Header="Score"
                                         DisplayMemberBinding="{Binding Score}" />
                         <GridViewColumn Header="Start Time"
-                                        DisplayMemberBinding="{Binding StartTime}" />
-                        <GridViewColumn Header="End Time"
-                                        DisplayMemberBinding="{Binding EndTime}" />
+                                        DisplayMemberBinding="{Binding PlayedAt}" />
                         <GridViewColumn Header="Duration"
                                         DisplayMemberBinding="{Binding Duration}" />
                     </GridView>
                 </ListView.View>
             </ListView>
         </GroupBox>
+        <!-- Pagination Controls -->
+        <StackPanel Grid.Row="4"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    Margin="0,10">
+            <Button Content="◀ Previous"
+                    x:Name="PrevPage"
+                    Margin="5"
+                    Padding="5,2" />
+            <TextBlock Text="{Binding PageIndex}"
+                       VerticalAlignment="Center"
+                       FontWeight="Bold"
+                       Margin="10,0" />
+            <Button Content="Next ▶"
+                    x:Name="NextPage"
+                    Margin="5"
+                    Padding="5,2" />
+        </StackPanel>
     </Grid>
 </UserControl>

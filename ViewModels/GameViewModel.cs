@@ -24,10 +24,10 @@ namespace BounceBall.ViewModels
 
         private DateTime _currentGameStartTime;
 
-        public int Score { get => _score; set { _score = value; NotifyOfPropertyChange(); } }
-        public bool IsRunning { get => _isRunning; set { _isRunning = value; NotifyOfPropertyChange(); } }
-        public double CanvasWidth { get => _canvasWidth; set { _canvasWidth = value; NotifyOfPropertyChange(); } }
-        public double CanvasHeight { get => _canvasHeight; set { _canvasHeight = value; NotifyOfPropertyChange(); } }
+        public int Score { get => _score; set => Set(ref _score, value); }
+        public bool IsRunning { get => _isRunning; set => Set(ref _isRunning, value); }
+        public double CanvasWidth { get => _canvasWidth; set => Set(ref _canvasWidth, value); }
+        public double CanvasHeight { get => _canvasHeight; set => Set(ref _canvasHeight, value); }
 
         private readonly IEventAggregator _events;
 
